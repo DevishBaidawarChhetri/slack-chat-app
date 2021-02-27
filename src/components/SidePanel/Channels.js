@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { Button, Form, Icon, Menu, Modal } from "semantic-ui-react";
+import { Button, Form, Icon, Input, Menu, Modal } from "semantic-ui-react";
 import firebase from "../../firebase";
 import { setCurrentChannel } from "../../actions";
 
@@ -173,23 +173,23 @@ class Channels extends Component {
           <Modal.Content>
             <Form onSubmit={this.handleSubmit}>
               <Form.Field>
-                <Form.Input
+                <Input
                   fluid
                   size="large"
                   name="channelName"
-                  icon="tag"
-                  iconPosition="left"
+                  label={<Button color="teal" icon={"tag"} />}
+                  labelPosition="left"
                   placeholder="Channel Name"
                   onChange={this.handleChange}
                 />
               </Form.Field>
               <Form.Field>
-                <Form.Input
+                <Input
                   fluid
                   size="large"
                   name="channelDetails"
-                  icon="info circle"
-                  iconPosition="left"
+                  label={<Button color="teal" icon={"info circle"} />}
+                  labelPosition="left"
                   placeholder="Channel Details"
                   onChange={this.handleChange}
                 />
