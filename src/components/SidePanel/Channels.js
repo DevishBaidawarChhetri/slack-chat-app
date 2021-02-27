@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Button, Form, Icon, Menu, Modal } from "semantic-ui-react";
 import firebase from "../../firebase";
+import { setCurrentChannel } from "../../actions";
 
 class Channels extends Component {
   state = {
@@ -10,6 +12,8 @@ class Channels extends Component {
     channelName: "",
     channelDetails: "",
     channelsRef: firebase.database().ref("channels"),
+    firstLoad: true,
+    activeChannel: "",
   };
 
   // Handle Input Changes
@@ -77,14 +81,50 @@ class Channels extends Component {
   componentDidMount() {
     this.addListeners();
   }
+
+  componentWillUnmount() {
+    this.removeListeners();
+  }
+
   addListeners = () => {
     let loadedChannels = [];
     this.state.channelsRef.on("child_added", (snap) => {
       loadedChannels.push(snap.val());
-      this.setState({
-        channels: loadedChannels,
-      });
+      this.setState(
+        {
+          channels: loadedChannels,
+        },
+        () => this.setFirstChannel()
+      );
     });
+  };
+
+  removeListeners = () => {
+    this.state.channelsRef.off();
+  };
+
+  // Setting First channel to global state
+  setFirstChannel = () => {
+    const firstChannel = this.state.channels[0];
+    if (this.state.firstLoad && this.state.channels.length > 0) {
+      this.props.setCurrentChannel(firstChannel);
+      this.setActiveChannel(firstChannel);
+    }
+    this.setState({
+      firstLoad: false,
+    });
+  };
+
+  setActiveChannel = (channel) => {
+    this.setState({
+      activeChannel: channel.id,
+    });
+  };
+
+  // Change Channel
+  changeChannel = (channel) => {
+    this.setActiveChannel(channel);
+    this.props.setCurrentChannel(channel);
   };
 
   // Display Available Channels
@@ -94,10 +134,11 @@ class Channels extends Component {
       <Menu.Item
         key={channel.id}
         onClick={() => {
-          console.log(channel);
+          this.changeChannel(channel);
         }}
         name={channel.name}
         style={{ marginLeft: "1rem" }}
+        active={channel.id === this.state.activeChannel}
       >
         <Icon.Group>
           <Icon name="slack hash" />{" "}
@@ -173,4 +214,4 @@ class Channels extends Component {
   }
 }
 
-export default Channels;
+export default connect(null, { setCurrentChannel })(Channels);
