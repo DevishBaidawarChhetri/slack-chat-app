@@ -168,7 +168,11 @@ class Channels extends Component {
         </Menu.Menu>
 
         {/* Modal for adding channel */}
-        <Modal basic open={modal} onClose={() => this.handleModal(modal)}>
+        <Modal
+          basic
+          open={modal}
+          //  onClose={() => this.handleModal(modal)}
+        >
           <Modal.Header>Add Channel</Modal.Header>
           <Modal.Content>
             <Form onSubmit={this.handleSubmit}>

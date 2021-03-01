@@ -7,7 +7,7 @@ body,
 }
 
 .messages-container {
-  height: 76%;
+  height: 75%;
 }
 
 .messages {
@@ -15,7 +15,7 @@ body,
   overflow-y: scroll;
 }
 
-.message-form {
+/* .message-form {
   position: fixed !important;
   bottom: 1em;
   right: 1em;
@@ -23,7 +23,7 @@ body,
   margin-left: 334px !important;
   margin-right: 8px !important;
   z-index: 1;
-}
+} */
 
 .message_self,
 .message_other {
