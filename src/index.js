@@ -8,7 +8,6 @@ import {
   Route,
   withRouter,
 } from "react-router-dom";
-import "semantic-ui-css/semantic.min.css";
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import firebase from "./firebase";
@@ -18,6 +17,7 @@ import { composeWithDevTools } from "redux-devtools-extension";
 import rootReducer from "./reducers";
 import { setUser, clearUser } from "./actions";
 import Spinner from "./Spinner";
+import "semantic-ui-css/semantic.min.css";
 
 const store = createStore(rootReducer, composeWithDevTools());
 

@@ -9,6 +9,7 @@ body,
 .messages-container {
   height: 76%;
 }
+
 .messages {
   height: 100% !important;
   overflow-y: scroll;
@@ -22,4 +23,13 @@ body,
   margin-left: 334px !important;
   margin-right: 8px !important;
   z-index: 1;
+}
+
+.message_self,
+.message_other {
+  border-left: 2px solid #f2711c;
+  padding-left: 8px;
+}
+.message_other {
+  border-color: #00b5ad;
 }
