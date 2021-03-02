@@ -10,6 +10,11 @@ const isOwnMessage = (msg, usr) => {
 // TimeStamp
 const timeFromNow = (timestamp) => moment(timestamp).fromNow();
 
+// Check if message has an Image
+const isImage = (message) => {
+  return message.hasOwnProperty("image") && !message.hasOwnProperty("content");
+};
+
 const Message = ({ message, user }) => (
   <Comment.Group>
     <Comment>
@@ -19,7 +24,11 @@ const Message = ({ message, user }) => (
           {message.user.name}
         </Comment.Author>
         <Comment.Metadata>{timeFromNow(message.timestamp)}</Comment.Metadata>
-        <Comment.Text>{message.content}</Comment.Text>
+        {isImage(message) ? (
+          <Image src={message.image} className="message_image" />
+        ) : (
+          <Comment.Text>{message.content}</Comment.Text>
+        )}
       </Comment.Content>
     </Comment>
   </Comment.Group>
