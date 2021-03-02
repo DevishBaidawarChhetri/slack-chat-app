@@ -38,3 +38,7 @@ body,
 .message_image {
   padding: 1em;
 }
+
+.progress_bar {
+  margin: 0.5rem 0 0 0 !important;
+}
