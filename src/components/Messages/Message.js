@@ -15,6 +15,8 @@ const isImage = (message) => {
   return message.hasOwnProperty("image") && !message.hasOwnProperty("content");
 };
 
+const conditions = ["http://", "https://", "www."];
+
 const Message = ({ message, user }) => (
   <Comment.Group>
     <Comment>
@@ -26,6 +28,16 @@ const Message = ({ message, user }) => (
         <Comment.Metadata>{timeFromNow(message.timestamp)}</Comment.Metadata>
         {isImage(message) ? (
           <Image src={message.image} className="message_image" />
+        ) : conditions.some((isLink) => message.content.includes(isLink)) ? (
+          <Comment.Text>
+            <a
+              style={{ textDecoration: "underline" }}
+              href={message.content}
+              target="_blank"
+            >
+              {message.content}
+            </a>
+          </Comment.Text>
         ) : (
           <Comment.Text>{message.content}</Comment.Text>
         )}

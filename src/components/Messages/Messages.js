@@ -12,6 +12,7 @@ class Messages extends Component {
     user: this.props.currentUser,
     mesasges: [],
     messagesLoading: true,
+    numUniqueUsers: "",
   };
 
   // Adding Listner
@@ -34,9 +35,11 @@ class Messages extends Component {
         messages: loadedMessages,
         messagesLoading: false,
       });
+      this.countUniqueUsers(loadedMessages);
     });
   };
 
+  // Displaying Messages
   displayMessages = (messages) => {
     if (messages && messages.length) {
       return messages.map((message) => (
@@ -49,11 +52,30 @@ class Messages extends Component {
     }
   };
 
+  // Displaying Channel name
+  displayChannelName = (channel) => (channel ? `#${channel.name}` : "");
+
+  // Count total unique user in current channel
+  countUniqueUsers = (messages) => {
+    const uniqueUsers = messages.reduce((acc, message) => {
+      if (!acc.includes(message.user.name)) {
+        acc.push(message.user.name);
+      }
+      return acc;
+    }, []);
+    const plural = uniqueUsers.length > 1 || uniqueUsers.length === 0;
+    const numUniqueUsers = `${uniqueUsers.length} user${plural ? "s" : ""}`;
+    this.setState({ numUniqueUsers });
+  };
+
   render() {
-    const { messagesRef, channel, user, messages } = this.state;
+    const { messagesRef, channel, user, messages, numUniqueUsers } = this.state;
     return (
       <>
-        <MessagesHeader />
+        <MessagesHeader
+          channelName={this.displayChannelName(channel)}
+          numUniqueUsers={numUniqueUsers}
+        />
         <Segment className="messages-container">
           <Comment className="messages">
             {/* Messages */}

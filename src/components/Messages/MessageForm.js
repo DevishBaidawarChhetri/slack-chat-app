@@ -180,6 +180,7 @@ class MessageForm extends Component {
             content="Upload Media"
             labelPosition="right"
             icon="cloud upload"
+            disabled={uploadState === "uploading"}
             onClick={() => this.handleModal(modal)}
           />
           <FileModal
