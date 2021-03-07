@@ -1,6 +1,8 @@
 import React, { Component } from "react";
+import { connect } from "react-redux";
 import { Menu, Icon } from "semantic-ui-react";
 import firebase from "../../firebase";
+import { setCurrentChannel, setPrivateChannel } from "../../actions";
 
 class DirectMessages extends Component {
   state = {
@@ -73,6 +75,24 @@ class DirectMessages extends Component {
   // Check user status for displaying "dot" status (online ? "Green" : "Grey" )
   isUserOnline = (user) => user.status === "online";
 
+  // Change Channel for direct message
+  changeChannel = (user) => {
+    const channelId = this.getChannelId(user.uid);
+    const channelData = {
+      id: channelId,
+      name: user.name,
+    };
+    this.props.setCurrentChannel(channelData);
+    this.props.setPrivateChannel(true);
+  };
+
+  getChannelId = (userId) => {
+    const currentUserId = this.state.user.uid;
+    return userId === currentUserId
+      ? `${userId}/${currentUserId}`
+      : `${currentUserId}/${userId}`;
+  };
+
   render() {
     const { users } = this.state;
     return (
@@ -88,12 +108,12 @@ class DirectMessages extends Component {
           return (
             <Menu.Item
               key={user.uid}
-              onClick={() => console.log(user)}
+              onClick={() => this.changeChannel(user)}
               style={{ fontStyle: "italic" }}
             >
               <Icon
                 name="circle"
-                color={this.isUserOnline(user) ? "green" : ""}
+                color={this.isUserOnline(user) ? "green" : "grey"}
                 size="small"
               />
               @ {user.name}
@@ -105,4 +125,6 @@ class DirectMessages extends Component {
   }
 }
 
-export default DirectMessages;
+export default connect(null, { setCurrentChannel, setPrivateChannel })(
+  DirectMessages
+);

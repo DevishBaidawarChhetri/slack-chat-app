@@ -15,7 +15,7 @@ const isImage = (message) => {
   return message.hasOwnProperty("image") && !message.hasOwnProperty("content");
 };
 
-const conditions = ["http://", "https://", "www."];
+const conditions = ["http://", "https://", "www"];
 
 const Message = ({ message, user }) => (
   <Comment.Group>

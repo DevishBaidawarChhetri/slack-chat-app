@@ -7,8 +7,8 @@ import Message from "./Message";
 
 class Messages extends Component {
   state = {
-    messagesRef: firebase.database().ref("messages"),
     channel: this.props.currentChannel,
+    messagesRef: firebase.database().ref("messages"),
     user: this.props.currentUser,
     mesasges: [],
     messagesLoading: true,
@@ -16,6 +16,8 @@ class Messages extends Component {
     searchTerm: "",
     searchLoading: false,
     searchResult: [],
+    privateChannel: this.props.isPrivateChannel,
+    privateMessagesRef: firebase.database().ref("privateMessages"),
   };
 
   // Adding Listner
@@ -32,7 +34,8 @@ class Messages extends Component {
 
   addMessageListener = (channelId) => {
     let loadedMessages = [];
-    this.state.messagesRef.child(channelId).on("child_added", (snap) => {
+    const ref = this.getMessagesRef();
+    ref.child(channelId).on("child_added", (snap) => {
       loadedMessages.push(snap.val());
       this.setState({
         messages: loadedMessages,
@@ -56,7 +59,11 @@ class Messages extends Component {
   };
 
   // Displaying Channel name
-  displayChannelName = (channel) => (channel ? `#${channel.name}` : "");
+  displayChannelName = (channel) => {
+    return channel
+      ? `${this.state.privateChannel ? "@" : "#"}${channel.name}`
+      : "";
+  };
 
   // Count total unique user in current channel
   countUniqueUsers = (messages) => {
@@ -99,6 +106,16 @@ class Messages extends Component {
     setTimeout(() => this.setState({ searchLoading: false }), 1000);
   };
 
+  /**
+   * Private Messages
+   */
+
+  getMessagesRef = () => {
+    const { messagesRef, privateMessagesRef, privateChannel } = this.state;
+    return privateChannel ? privateMessagesRef : messagesRef;
+  };
+  
+
   render() {
     const {
       messagesRef,
@@ -109,7 +126,9 @@ class Messages extends Component {
       searchTerm,
       searchResult,
       searchLoading,
+      privateChannel,
     } = this.state;
+
     return (
       <>
         <MessagesHeader
@@ -117,6 +136,7 @@ class Messages extends Component {
           numUniqueUsers={numUniqueUsers}
           handleSearchChange={this.handleSearchChange}
           searchLoading={searchLoading}
+          isPrivateChannel={privateChannel}
         />
         <Segment className="messages-container">
           <Comment className="messages">
@@ -130,6 +150,8 @@ class Messages extends Component {
           messagesRef={messagesRef}
           currentUser={user}
           currentChannel={channel}
+          isPrivateChannel={privateChannel}
+          getMessagesRef={this.getMessagesRef}
         />
       </>
     );
