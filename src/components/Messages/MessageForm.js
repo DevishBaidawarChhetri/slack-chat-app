@@ -135,7 +135,6 @@ class MessageForm extends Component {
 
   // Send File
   sendFileMessage = (fileUrl, ref, pathToUpload) => {
-    console.log(ref());
     ref()
       .child(pathToUpload)
       .push()
