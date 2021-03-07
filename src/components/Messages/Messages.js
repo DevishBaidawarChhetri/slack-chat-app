@@ -13,6 +13,9 @@ class Messages extends Component {
     mesasges: [],
     messagesLoading: true,
     numUniqueUsers: "",
+    searchTerm: "",
+    searchLoading: false,
+    searchResult: [],
   };
 
   // Adding Listner
@@ -68,18 +71,59 @@ class Messages extends Component {
     this.setState({ numUniqueUsers });
   };
 
+  // Search Message
+  handleSearchChange = (event) => {
+    this.setState(
+      {
+        searchTerm: event.target.value,
+        searchLoading: true,
+      },
+      () => this.handleSearchMessage()
+    );
+  };
+
+  // Handle Search Message
+  handleSearchMessage = () => {
+    const channelMessages = [...this.state.messages];
+    const regex = new RegExp(this.state.searchTerm, "gi");
+    const searchResult = channelMessages.reduce((acc, msg) => {
+      if (
+        (msg.content && msg.content.match(regex)) ||
+        msg.user.name.match(regex)
+      ) {
+        acc.push(msg);
+      }
+      return acc;
+    }, []);
+    this.setState({ searchResult });
+    setTimeout(() => this.setState({ searchLoading: false }), 1000);
+  };
+
   render() {
-    const { messagesRef, channel, user, messages, numUniqueUsers } = this.state;
+    const {
+      messagesRef,
+      channel,
+      user,
+      messages,
+      numUniqueUsers,
+      searchTerm,
+      searchResult,
+      searchLoading,
+    } = this.state;
     return (
       <>
         <MessagesHeader
           channelName={this.displayChannelName(channel)}
           numUniqueUsers={numUniqueUsers}
+          handleSearchChange={this.handleSearchChange}
+          searchLoading={searchLoading}
         />
         <Segment className="messages-container">
           <Comment className="messages">
             {/* Messages */}
-            {this.displayMessages(messages)}
+            {searchTerm
+              ? this.displayMessages(searchResult)
+              : this.displayMessages(messages)}
           </Comment>
         </Segment>
         <MessageForm
