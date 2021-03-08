@@ -54,7 +54,7 @@ class Channels extends Component {
     const newChannel = {
       id: key,
       name: channelName,
-      detaiils: channelDetails,
+      details: channelDetails,
       createdBy: {
         name: user.displayName,
         avatar: user.photoURL,
@@ -167,6 +167,7 @@ class Channels extends Component {
     });
   };
 
+  // Set Active to active channel
   setActiveChannel = (channel) => {
     this.setState({
       activeChannel: channel.id,
