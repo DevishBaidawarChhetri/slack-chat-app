@@ -27,8 +27,14 @@ class MetaPanel extends Component {
 
   // Displaying top users with high posts
   displayTopPosters = (posts) =>
+    // console.log(
+    //   Object.entries(posts)
+    //     .sort((a, b) => b[1].count - a[1].count)
+
+    // );
+
     Object.entries(posts)
-      .sort((a, b) => b[1] - a[1])
+      .sort((a, b) => b[1].count - a[1].count)
       .map(([key, value], i) => (
         <List.Item key={i}>
           <Image avatar src={value.avatar} />
@@ -38,7 +44,8 @@ class MetaPanel extends Component {
           </List.Content>
           <hr />
         </List.Item>
-      ));
+      ))
+      .slice(0, 3);
 
   render() {
     const { activeIndex, privateChannel, channel } = this.state;
@@ -48,7 +55,7 @@ class MetaPanel extends Component {
 
     return (
       <Segment loading={!channel}>
-        <Header as="h3" attached="top" textAlign="center">
+        <Header as="h3" attached="top">
           About #{channel && channel.name}
         </Header>
         {/* Channel Details */}
@@ -62,10 +69,7 @@ class MetaPanel extends Component {
             <Icon name="info" />
             Channel Details
           </Accordion.Title>
-          <Accordion.Content
-            style={{ textAlign: "center" }}
-            active={activeIndex === 0}
-          >
+          <Accordion.Content active={activeIndex === 0}>
             {channel && channel.details}
           </Accordion.Content>
 

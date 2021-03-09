@@ -11,19 +11,19 @@ class UserPanel extends Component {
     {
       key: "user",
       text: (
-        <span>
+        <p>
           Signed in as <strong>{this.state.user.displayName}</strong>
-        </span>
+        </p>
       ),
       disabled: true,
     },
     {
       key: "avatar",
-      text: <span>Change Avatar</span>,
+      text: <p>Change Avatar</p>,
     },
     {
       key: "signout",
-      text: <span onClick={this.handleSignout}>Sign Out</span>,
+      text: <p onClick={this.handleSignout}>Sign Out</p>,
     },
   ];
 

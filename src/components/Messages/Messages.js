@@ -60,7 +60,6 @@ class Messages extends Component {
         if (data.val() !== null) {
           const channelIds = Object.keys(data.val());
           const prevStarred = channelIds.includes(channelId);
-          console.log(prevStarred);
           this.setState({ isChannelStarred: prevStarred });
         }
       });
