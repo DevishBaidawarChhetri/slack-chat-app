@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { toast } from "react-toastify";
 import { Icon, Menu } from "semantic-ui-react";
 import { setCurrentChannel, setPrivateChannel } from "../../actions";
 import firebase from "../../firebase";

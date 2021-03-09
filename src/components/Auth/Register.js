@@ -11,6 +11,7 @@ import {
 import { Link } from "react-router-dom";
 import firebase from "../../firebase";
 import md5 from "md5";
+import { toast } from "react-toastify";
 
 class Register extends Component {
   state = {
@@ -88,6 +89,7 @@ class Register extends Component {
             .then(() => {
               this.saveUser(createdUser).then(() => {
                 console.log("User Saved");
+                toast(`🙏 Wow, new user, you are heartily welcome! 😍`);
               });
             })
             .catch((err) => {

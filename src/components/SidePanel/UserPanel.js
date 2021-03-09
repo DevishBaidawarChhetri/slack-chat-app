@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { toast } from "react-toastify";
 import { Dropdown, Grid, Header, Icon, Image } from "semantic-ui-react";
 import firebase from "../../firebase";
 

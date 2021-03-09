@@ -64,3 +64,8 @@ body,
   height: 35px;
   transform: rotate(225deg);
 }
+
+.Toastify__toast-body {
+  color: black !important;
+  font-weight: bold !important;
+}

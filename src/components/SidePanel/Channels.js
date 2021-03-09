@@ -11,6 +11,7 @@ import {
 } from "semantic-ui-react";
 import firebase from "../../firebase";
 import { setCurrentChannel, setPrivateChannel } from "../../actions";
+import { toast } from "react-toastify";
 
 class Channels extends Component {
   state = {
@@ -70,7 +71,8 @@ class Channels extends Component {
           channelDetails: "",
         });
         this.handleModal(modal);
-        console.log("channel added");
+        // console.log("channel added");
+        toast(`😲 New Channel Added! 🙏`);
       })
       .catch((err) => {
         console.error(err);

@@ -6,6 +6,7 @@ import firebase from "../../firebase";
 import Message from "./Message";
 import { setUserPosts } from "../../actions";
 import { connect } from "react-redux";
+import { toast } from "react-toastify";
 
 class Messages extends Component {
   state = {
@@ -171,6 +172,7 @@ class Messages extends Component {
           },
         },
       });
+      toast(` 🤩 Wow, You sucessfully starred this channel. ❣️`);
     } else {
       this.state.usersRef
         .child(`${this.state.user.uid}/starred`)
@@ -178,8 +180,10 @@ class Messages extends Component {
         .remove((err) => {
           if (err !== null) {
             console.error(err);
+            toast(`😧 : Sorry, something went wrong! 😢`);
           }
         });
+      toast(`💔 You unstared this channel? Hope you find a good one! 😢`);
     }
   };
 

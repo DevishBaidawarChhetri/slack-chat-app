@@ -10,6 +10,7 @@ import {
 } from "semantic-ui-react";
 import { Link } from "react-router-dom";
 import firebase from "../../firebase";
+import { toast } from "react-toastify";
 
 class Login extends Component {
   state = {
@@ -36,7 +37,8 @@ class Login extends Component {
         .auth()
         .signInWithEmailAndPassword(this.state.email, this.state.password)
         .then((signedInUser) => {
-          console.log(signedInUser);
+          // console.log(signedInUser);
+          toast(`😃 Welcome, '${signedInUser.user.displayName}'! ❤️`);
         })
         .catch((err) => {
           console.error(err);

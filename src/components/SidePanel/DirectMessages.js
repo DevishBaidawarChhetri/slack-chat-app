@@ -106,18 +106,25 @@ class DirectMessages extends Component {
       <Menu.Menu className="menu">
         <Menu.Item>
           <span>
-            <Icon name="mail" /> Direct Messages
+            {/* <Icon name="mail" /> Direct Messages */}
+            <Icon name="users" /> Total Users
           </span>{" "}
           ({users.length})
         </Menu.Item>
         {/* Users to send direct messages */}
         {users.map((user) => {
           return (
+            // <Menu.Item
+            //   key={user.uid}
+            //   style={{ fontStyle: "italic" }}
+            //   active={user.uid === activeChannel}
+            //   onClick={() => this.changeChannel(user)}
+            // >
             <Menu.Item
               key={user.uid}
               style={{ fontStyle: "italic" }}
-              active={user.uid === activeChannel}
-              onClick={() => this.changeChannel(user)}
+              // active={user.uid === activeChannel}
+              // onClick={() => this.changeChannel(user)}
             >
               <Icon
                 name="circle"

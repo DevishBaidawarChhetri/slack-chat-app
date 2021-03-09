@@ -6,7 +6,8 @@ import SidePanel from "./SidePanel/SidePanel";
 import Messages from "./Messages/Messages";
 import MetaPanel from "./MetaPanel/MetaPanel";
 import { connect } from "react-redux";
-import { setCurrentChannel } from "../actions";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const App = ({
   currentUser,
@@ -47,6 +48,7 @@ const App = ({
           userPosts={userPosts}
         />
       </Grid.Column>
+      <ToastContainer position="bottom-right" />
     </Grid>
   );
 };
