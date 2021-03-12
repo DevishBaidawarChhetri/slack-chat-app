@@ -85,7 +85,7 @@ class MessageForm extends Component {
   handleKeyDown = (event) => {
     if (event.keyCode === 13) {
       // check key code at http://keycode.info/
-      
+
       this.handleSendMessage();
     }
     const { channel, message, typingRef, user } = this.state;
@@ -95,11 +95,11 @@ class MessageForm extends Component {
       typingRef.child(channel.id).child(user.uid).remove();
     }
   };
-
+cw
   // Setting up the path
   getPath = () => {
     if (this.props.isPrivateChannel) {
-      return `chat/private-${this.state.channel.id}`;
+      return `chat/private/${this.state.channel.id}`;
     } else {
       return `chat/public`;
     }
@@ -197,6 +197,13 @@ class MessageForm extends Component {
       return x;
     });
   };
+
+  componentWillUnmount() {
+    if (this.state.uploadTask !== null) {
+      this.state.uploadTask.cancel();
+      this.setState({ uploadTask: null });
+    }
+  }
 
   render() {
     const {
