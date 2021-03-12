@@ -17,6 +17,7 @@ class MessageForm extends Component {
     uploadTask: null,
     storageRef: firebase.storage().ref(),
     percentUploaded: 0,
+    typingRef: firebase.database().ref("typing"),
   };
 
   // Handle Message Input
@@ -52,7 +53,7 @@ class MessageForm extends Component {
   // Handle Send Message
   handleSendMessage = () => {
     const { getMessagesRef } = this.props;
-    const { message, channel } = this.state;
+    const { message, channel, user, typingRef } = this.state;
     if (message) {
       this.setState({ loading: true });
       getMessagesRef()
@@ -61,6 +62,7 @@ class MessageForm extends Component {
         .set(this.createMessage())
         .then(() => {
           this.setState({ loading: false, message: "", errors: [] });
+          typingRef.child(channel.id).child(user.uid).remove();
         })
         .catch((err) => {
           console.error(err);
@@ -73,6 +75,16 @@ class MessageForm extends Component {
       this.setState({
         errors: this.state.errors.concat({ message: "Add a message" }),
       });
+    }
+  };
+
+  // Handle Key Down (Showing animation while others are typing)
+  handleKeyDown = () => {
+    const { channel, message, typingRef, user } = this.state;
+    if (message) {
+      typingRef.child(channel.id).child(user.uid).set(user.displayName);
+    } else {
+      typingRef.child(channel.id).child(user.uid).remove();
     }
   };
 
@@ -176,6 +188,7 @@ class MessageForm extends Component {
             labelPosition="left"
             placeholder="Write your message"
             onChange={this.handleChange}
+            onKeyDown={this.handleKeyDown}
           />
           <Button.Group icon widths="2">
             <Button
