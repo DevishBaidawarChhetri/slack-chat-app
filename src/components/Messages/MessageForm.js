@@ -4,6 +4,8 @@ import firebase from "../../firebase";
 import FileModal from "./FileModal";
 import { v4 as uuidv4 } from "uuid";
 import ProgressBar from "./ProgressBar";
+import { Picker, emojiIndex } from "emoji-mart";
+import "emoji-mart/css/emoji-mart.css";
 
 class MessageForm extends Component {
   state = {
@@ -18,6 +20,7 @@ class MessageForm extends Component {
     storageRef: firebase.storage().ref(),
     percentUploaded: 0,
     typingRef: firebase.database().ref("typing"),
+    emojiPicker: false,
   };
 
   // Handle Message Input
@@ -79,7 +82,12 @@ class MessageForm extends Component {
   };
 
   // Handle Key Down (Showing animation while others are typing)
-  handleKeyDown = () => {
+  handleKeyDown = (event) => {
+    if (event.keyCode === 13) {
+      // check key code at http://keycode.info/
+      
+      this.handleSendMessage();
+    }
     const { channel, message, typingRef, user } = this.state;
     if (message) {
       typingRef.child(channel.id).child(user.uid).set(user.displayName);
@@ -162,6 +170,34 @@ class MessageForm extends Component {
       });
   };
 
+  // Toggle Emoji Picker
+  handleTogglePicker = () => {
+    this.setState({ emojiPicker: !this.state.emojiPicker });
+  };
+
+  // Handle Picked Emoji
+  handleAddEmoji = (emoji) => {
+    const oldMessage = this.state.message;
+    const newMessage = this.colonToUnicode(`${oldMessage} ${emoji.colons} `);
+    this.setState({ message: newMessage, emojiPicker: false });
+    setTimeout(() => this.messageInputRef.focus(), 0);
+  };
+
+  colonToUnicode = (message) => {
+    return message.replace(/:[A-Za-z0-9_+-]+:/g, (x) => {
+      x = x.replace(/:/g, "");
+      let emoji = emojiIndex.emojis[x];
+      if (typeof emoji !== "undefined") {
+        let unicode = emoji.native;
+        if (typeof unicode !== "undefined") {
+          return unicode;
+        }
+      }
+      x = ":" + x + ":";
+      return x;
+    });
+  };
+
   render() {
     const {
       errors,
@@ -170,59 +206,79 @@ class MessageForm extends Component {
       modal,
       uploadState,
       percentUploaded,
+      emojiPicker,
     } = this.state;
     return (
       <Segment className="message-form">
-        <Form size="large" onSubmit={this.handleSendMessage}>
-          <Input
-            fluid
-            name="message"
-            className={
-              errors.some((error) => error.message.includes("message"))
-                ? "error"
-                : ""
-            }
-            value={message}
-            style={{ marginBottom: "0.7em" }}
-            label={<Button icon={"add"} />}
+        {emojiPicker && (
+          <div className="emoji_holder">
+            <Picker
+              set="facebook"
+              className="emoji_picker"
+              title="Pick Your Emoji"
+              emoji="point_up"
+              theme="auto"
+              onSelect={this.handleAddEmoji}
+            />
+          </div>
+        )}
+        {/* <Form size="large" onSubmit={this.handleSendMessage}> */}
+        <Input
+          fluid
+          name="message"
+          className={
+            errors.some((error) => error.message.includes("message"))
+              ? "error"
+              : ""
+          }
+          value={message}
+          ref={(node) => (this.messageInputRef = node)}
+          style={{ marginBottom: "0.7em" }}
+          label={
+            <Button
+              icon={emojiPicker ? "close" : "smile outline"}
+              onClick={this.handleTogglePicker}
+            />
+          }
+          color="red"
+          labelPosition="left"
+          placeholder="Write your message"
+          onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
+        />
+        <Button.Group icon widths="2">
+          <Button
+            color="orange"
+            content="Add Reply"
             labelPosition="left"
-            placeholder="Write your message"
-            onChange={this.handleChange}
-            onKeyDown={this.handleKeyDown}
+            icon="edit"
+            onClick={this.handleSendMessage}
+            disabled={loading}
           />
-          <Button.Group icon widths="2">
-            <Button
-              color="orange"
-              content="Add Reply"
-              labelPosition="left"
-              icon="edit"
-              onClick={this.handleSendMessage}
-              disabled={loading}
-            />
-            <Button
-              color="teal"
-              content="Upload Media"
-              labelPosition="right"
-              icon="cloud upload"
-              disabled={uploadState === "uploading"}
-              onClick={() => this.handleModal(modal)}
-            />
-            <FileModal
-              modal={modal}
-              handleModal={() => this.handleModal(modal)}
-              uploadFile={this.uploadFile}
-            />
-          </Button.Group>
+          <Button
+            color="teal"
+            content="Upload Media"
+            labelPosition="right"
+            icon="cloud upload"
+            disabled={uploadState === "uploading"}
+            onClick={() => this.handleModal(modal)}
+          />
           <FileModal
             modal={modal}
             handleModal={() => this.handleModal(modal)}
             uploadFile={this.uploadFile}
           />
-          <ProgressBar
-            uploadState={uploadState}
-            percentUploaded={percentUploaded}
-          />
-        </Form>
+        </Button.Group>
+        <FileModal
+          modal={modal}
+          handleModal={() => this.handleModal(modal)}
+          uploadFile={this.uploadFile}
+        />
+        <ProgressBar
+          uploadState={uploadState}
+          percentUploaded={percentUploaded}
+        />
+        {/* </Form> */}
       </Segment>
     );
   }

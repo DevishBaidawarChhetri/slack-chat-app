@@ -5,6 +5,7 @@ import MessagesHeader from "./MessagesHeader";
 import firebase from "../../firebase";
 import Message from "./Message";
 import Typing from "./Typing";
+import Skeleton from "./Skeleton";
 import { setUserPosts } from "../../actions";
 import { connect } from "react-redux";
 import { toast } from "react-toastify";
@@ -37,6 +38,16 @@ class Messages extends Component {
       this.addUserStarsListener(channel.id, user.uid);
     }
   }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.messagesEnd) {
+      this.scrollToBottom();
+    }
+  }
+
+  scrollToBottom = () => {
+    this.messagesEnd.scrollIntoView({ behavior: "smooth" });
+  };
 
   addListeners = (channelId) => {
     this.addMessageListener(channelId);
@@ -237,6 +248,16 @@ class Messages extends Component {
       </div>
     ));
 
+  // Displaying Message Skeleton
+  displayMessagesSkeleton = (loading) =>
+    loading ? (
+      <>
+        {[...Array(20)].map((i) => (
+          <Skeleton key={i} />
+        ))}
+      </>
+    ) : null;
+
   render() {
     const {
       messagesRef,
@@ -250,6 +271,7 @@ class Messages extends Component {
       privateChannel,
       isChannelStarred,
       typingUsers,
+      messagesLoading,
     } = this.state;
 
     return (
@@ -265,11 +287,13 @@ class Messages extends Component {
         />
         <Segment className="messages-container">
           <Comment className="messages">
+            {this.displayMessagesSkeleton(messagesLoading)}
             {/* Messages */}
             {searchTerm
               ? this.displayMessages(searchResult)
               : this.displayMessages(messages)}
             {this.displayTypingUsers(typingUsers)}
+            <div ref={(node) => (this.messagesEnd = node)}></div>
           </Comment>
         </Segment>
         <MessageForm

@@ -14,7 +14,7 @@ body,
   overflow-y: scroll;
 }
 
-/* .message-form {
+.message-form {
   position: fixed !important;
   bottom: 1em;
   right: 1em;
@@ -22,7 +22,7 @@ body,
   margin-left: 334px !important;
   margin-right: 8px !important;
   z-index: 1;
-} */
+}
 
 .message_self,
 .message_other {
@@ -110,4 +110,82 @@ body,
   100% {
     opacity: 0;
   }
+}
+
+.emoji_holder {
+  position: relative;
+  margin-bottom: 0.8rem;
+}
+
+.emoji-mart {
+  width: auto !important;
+}
+
+.emoji_picker {
+  position: absolute;
+  bottom: 10vh;
+}
+
+/* Skeleton */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.skeleton::after {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  animation: slide 2s infinite;
+  background-image: linear-gradient(
+    to left,
+    transparent,
+    rgba(255, 255, 255, 0.4)
+  );
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(150%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.skeleton_avatar {
+  height: 35px;
+  width: 35px;
+  border-radius: 3px;
+  background-color: rgba(58, 57, 57, 0.2);
+}
+
+.skeleton_author {
+  background-color: rgba(58, 57, 57, 0.2);
+  width: 12ppx;
+  height: 10px;
+  border-radius: 3px;
+  position: absolute;
+  bottom: 30px;
+  left: 40px;
+  right: 0;
+}
+
+.skeleton_details {
+  background-color: rgba(58, 57, 57, 0.2);
+  height: 20px;
+  border-radius: 3px;
+  position: absolute;
+  bottom: 5px;
+  left: 40px;
+  right: 20px;
 }
